@@ -1,4 +1,0 @@
-function createUser() 
-  {
-    alert("Noice");
-  }
