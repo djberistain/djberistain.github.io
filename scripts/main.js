@@ -3,7 +3,7 @@ const myImage = document.querySelector("img");
 myImage.onclick = () => 
 {
   const mySrc = myImage.getAttribute("src");
-  if (mySrc === "../web-development/images/soundwaves.jpg") {
+  if (mySrc === "images/soundwaves.jpg") {
     myImage.setAttribute("src", "images/skull.jpg");
   } else {
     myImage.setAttribute("src", "images/soundwaves.jpg");
