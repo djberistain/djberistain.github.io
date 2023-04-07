@@ -8,8 +8,8 @@ const FREQUENCIES = {
     0: [261.63, 246.94, 220.00, 196, 174.61, 164.81, 146.83, 130.81]
    
 }
-const PLAY_IMAGE = "url('images/play.svg')"
-const STOP_IMAGE = "url('images/square.svg')"
+const PLAY_IMAGE = "url('play.svg')"
+const STOP_IMAGE = "url('square.svg')"
 
 // Settings
 
@@ -30,6 +30,7 @@ var length_ = LENGTH
 var beatsPerBar = BEATS_PER_BAR
 var range = RANGE
 var playing = false;
+var overlayCreated = false
 
 // Objects
 var playButton = document.getElementById("play")
@@ -103,40 +104,42 @@ function playNote(i) {
 }
 function createGrid(row, col) {
     let tbl = document.getElementById("sheet")
-    let tbl_overlay = document.getElementById("sheet-overlay")
+    let tbl_overlay = document.getElementById("overlay")
     let barColor = GRAY
     grid_row = row
     grid_col = col
     for(let i = 0; i < row; i++) { // Begin by creating a row.
         let myRow = document.createElement("tr")
-        let myRow_overlay = document.createElement("tr");
-
-        myRow.id = "row" + i
-        myRow_overlay.id = "row_overlay" + i
+        myRow.id = "row" + i  
         tbl.append(myRow)
-        tbl_overlay.append(myRow_overlay)
-
         let rowW = document.getElementById("row" + i)
-        let rowW_overlay = document.getElementById("row_overlay" + i)
+        let rowW_overlay = null
+
+        let myRow_overlay = document.createElement("tr");
+        myRow_overlay.id = "row_overlay" + i
+        rowW_overlay = document.getElementById("row_overlay" + i)
+        rowW_overlay = myRow_overlay
+        tbl_overlay.append(myRow_overlay)
 
         for(let j = 0; j < col; ++j) { // Fill in the row with the appropriate columns.
             let myCell = document.createElement("td")
-            let myCell_overlay = document.createElement("td")
-            myCell_overlay.style.backgroundColor = "#16a8f0"
-            myCell_overlay.style.visibility = "hidden"
-
             rowW.appendChild(myCell)
-            rowW_overlay.appendChild(myCell_overlay)
+            
             myCell.i = i
             myCell.j = j 
-            myCell.overlay = myCell_overlay
-            overlay[i][j] = myCell_overlay
             
             if (j% (BEATS_PER_BAR*SPLIT) == 0 ) {
                 barColor = (barColor == GRAY) ? "white" : GRAY
             }
 
-
+            let myCell_overlay = document.createElement("td")
+            myCell_overlay.style.backgroundColor = "#16a8f0"
+            myCell_overlay.style.visibility = "hidden"
+            myCell.overlay = myCell_overlay
+            overlay[i][j] = myCell_overlay
+            rowW_overlay.appendChild(myCell_overlay)
+                
+            
             myCell.style.backgroundColor = barColor
             myCell.default = barColor
             myCell.addEventListener("click", () => {
@@ -215,9 +218,14 @@ function playButtonClicked() {
 }
 
 function updateSettings() {
-
     // TODO : Reset table
-    console.log("yo")
+    
+    settingsDiv.style.visibility = "hidden"
+    $('#sheet').empty()
+    $('#overlay').empty()
+    makeSheet(rangeAnalysis(), LENGTH * BEATS_PER_BAR * SPLIT)
+
+    
 }
 
 function rangeAnalysis() {
@@ -242,10 +250,11 @@ tempoSlider.addEventListener("input", () => {
 beatsPerBarSlider.addEventListener("input", () => {
     beatsPerBarCounter.innerText = beatsPerBarSlider.value
     BEATS_PER_BAR = beatsPerBarSlider.value
+
 })
 splitSlider.addEventListener("input", () => {
     splitCounter.innerText = splitSlider.value
-    SPLIT = splitSlider.Value
+    SPLIT = splitSlider.value
 })
 settingsButton.addEventListener("click", () => {
     settingsDiv.style.visibility = "visible"
