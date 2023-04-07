@@ -6,6 +6,7 @@ body
 
 {
     width: 600px;
+    height: 800px;
     margin: 0 auto;
     background-color: blueviolet;
     padding: 0 20px 20px 20px;
@@ -15,9 +16,10 @@ body
 h1
 {
   
-  margin: 0;
+  margin: 0 auto;
   padding: 20px 0;
   color:aquamarine;
+  display: block;
   text-shadow: 3px 3px 1px black;
 }
 
@@ -27,6 +29,84 @@ img
     height: 375px;
     display: block;
     margin: 0 auto;
+}
+
+button
+{
+    display: block;
+    margin: 10px auto;
+    width: 90%;
+    border-radius: 12px;
+    font-size: 20px;   
+    
+}
+
+
+
+
+/* The popup form - hidden by default */
+.form-popup 
+{
+  display: none; 
+  position: sticky;
+  bottom: 50%;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+
+/* Add styles to the form container */
+.form-container 
+{
+    display: block;
+    margin: 0 auto;  
+  max-width: 600px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width input fields */
+.form-container input[type=text],
+.form-container input[type=password],
+.form-container input[type=email] 
+{
+  width: 95%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #ebeaea;
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus,
+.form-container input[type=password]:focus 
+{
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn 
+{
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel 
+{
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover 
+{
+  opacity: 1;
 }
 
 p

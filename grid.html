@@ -1,0 +1,52 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <title>Jam Editor</title>
+        <link rel="stylesheet" href="styles/site.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Sono:wght@400;600&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Sono&display=swap" rel="stylesheet">
+    </head>
+</html>
+<body>
+    <div id="title"> Jam Editor</div>
+    <div id="div-sheet"><table id="sheet"></table></div>
+    <div id="div-sheet-overlay"><table id="sheet-overlay"></table></div>
+    <div id="control">
+        <button type="button" id="play"></button>
+        <button type="button" id="settings">Settings</button>
+        <div class="div-tempo">
+            <label class="tlabel" for="range">Tempo</label>
+            <input type="range" id="tempo" min="40" max="240" value="120">
+            <label class="tlabel" id="counter-tempo" for="range">0</label>
+        </div>
+    </div>
+    <div id="settings-popup" visibility="hidden">
+        <h1 id="settings-title">Settings</h1>
+        
+
+        <div class="div-beats-per-bar">
+            <label class="bpblabel" for="range">Beats per bar</label>
+            <input type="range" id="beats-per-bar" min="2" max="7" value="4">
+            <label class="tlabel" id="counter-bpb" for="range">0</label>
+        </div>
+
+        <div class="div-split">
+            <label class="split-label" for="range">Split beats into</label>
+            <input type="range" id="split" min="1" max="4" value="1">
+            <label class="tlabel" id="counter-split" for="range">0</label>
+        </div>
+
+
+        <button type="button" id="close-button">Ok!</button>
+
+    </div>
+    
+    <script src="scripts/site.js"></script>
+</body>
+
+
+</html>

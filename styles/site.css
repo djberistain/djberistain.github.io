@@ -1,0 +1,124 @@
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    height: 100%;
+}
+
+#title{
+    
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Sono', sans-serif;
+    font-weight: bold;
+    font-size: 1.8em;
+    text-transform: uppercase;
+    position: fixed;
+    width: 100%;
+    height:8%;
+    
+}
+#div-sheet{
+    width: 100%;
+    height: 78%;
+    position: fixed;
+    top: 9%;
+    left: 0;
+}
+
+#div-sheet-overlay{
+    z-index: 1;
+    width: 100%;
+    height: 78%;
+    position: absolute;
+    opacity: 15%;
+    pointer-events: none;
+    top: 9%;
+    left: 0;
+
+}
+
+#control {
+    width: 100%;
+    height: 13.5%;
+    position: fixed;
+    top: 87%;
+
+}
+
+#play{
+    width: 80px;
+    height: 80px;
+    background-color: #16a8f0;
+    border-radius: 50%;
+    position: relative;
+    border-style: none;
+    background-image: url("play.svg");
+    background-size: 34%;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition-duration: 0.4s;
+    cursor: pointer;
+  
+}
+
+#settings {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    cursor: pointer;
+    position: absolute;
+}
+
+#settings-popup{
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: #ffffff; 
+    position: absolute;
+    text-align: center;
+}
+
+#settings-popup #settings-title {
+    font-family: 'Sono', sans-serif;
+}
+
+#settings-popup > *{
+    margin: auto;
+}
+
+
+#settings-popup #close-button {
+
+}
+
+.div-tempo{
+    left: 10%;
+    top: 50%;
+}
+
+.tlabel{
+    font-family: 'Sono', sans-serif;
+    text-align: center;
+    align-items: center;
+}
+
+#tempo{
+    accent-color: #16a8f0;
+    outline: none;
+    
+}
+
+#play:hover{
+    background-color: rgb(113, 192, 244);
+}
+
+td, th {
+    box-shadow: 0px 0px 0px 1px rgba(114, 190, 236, 0.5);
+    text-align: left;
+    height: 35px;
+    padding: 8px;
+}

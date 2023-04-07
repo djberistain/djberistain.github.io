@@ -10,27 +10,18 @@ myImage.onclick = () =>
   }
 };
 
-let myButton = document.querySelector("#user_change");
-let myHeading = document.querySelector("h1");
-
-myButton.onclick = () =>
-{
-    setUserName();
+function openLogin() {
+  document.getElementById("login-popup").style.display = "block";
 }
 
-function setUserName() 
-{
-    const myName = prompt("Please enter your name.");
-    localStorage.setItem("name", myName);
-    myHeading.textContent = `Welcome to Jamspace, ${myName}`;
+function closeLogin() {
+  document.getElementById("login-popup").style.display = "none";
 }
-  
-if (!localStorage.getItem("name")) 
-  {
-    setUserName();
-  } else {
-    const storedName = localStorage.getItem("name");
-    myHeading.textContent = `Welcome to Jamspace, ${storedName}`;
-  }
 
+function openProfileCreate() {
+  document.getElementById("profileCreate-popup").style.display = "block";
+}
 
+function closeProfileCreate() {
+  document.getElementById("profileCreate-popup").style.display = "none";
+}
