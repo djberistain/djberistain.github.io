@@ -8,8 +8,8 @@ const FREQUENCIES = {
     0: [261.63, 246.94, 220.00, 196, 174.61, 164.81, 146.83, 130.81]
    
 }
-const PLAY_IMAGE = "url('play.svg')"
-const STOP_IMAGE = "url('square.svg')"
+const PLAY_IMAGE = "url('https://raw.githubusercontent.com/djberistain/djberistain.github.io/main/images/play.svg')"
+const STOP_IMAGE = "url('https://raw.githubusercontent.com/djberistain/djberistain.github.io/main/images/square.svg')"
 
 // Settings
 
@@ -37,8 +37,10 @@ var playButton = document.getElementById("play")
 var tempoCounter = document.getElementById("counter-tempo");
 var beatsPerBarCounter = document.getElementById("counter-bpb")
 var splitCounter = document.getElementById("counter-split")
+var lengthCounter = document.getElementById("counter-length")
 var tempoSlider = document.getElementById("tempo")
 var splitSlider = document.getElementById("split")
+var lengthSlider = document.getElementById("length")
 var beatsPerBarSlider = document.getElementById("beats-per-bar")
 var settingsCloseButton = document.getElementById("close-button")
 var settingsDiv = document.getElementById("settings-popup")
@@ -169,6 +171,7 @@ function makeSheet(row, col) {
     tempoCounter.innerText = tempoSlider.value
     beatsPerBarCounter.innerText = beatsPerBarSlider.value
     splitCounter.innerText = splitSlider.value
+    lengthCounter.innerText = lengthSlider.value
     settingsDiv.style.visibility = "hidden"
 }
 
@@ -208,6 +211,8 @@ async function play() {
         await sleep( (60/tempoSlider.value)*1000)
         clearBoard()
     }
+
+    
     playButton.style.backgroundImage = PLAY_IMAGE
     playing = false;
 }
@@ -255,6 +260,10 @@ beatsPerBarSlider.addEventListener("input", () => {
 splitSlider.addEventListener("input", () => {
     splitCounter.innerText = splitSlider.value
     SPLIT = splitSlider.value
+})
+lengthSlider.addEventListener("input", () => {
+    lengthCounter.innerText = lengthSlider.value
+    LENGTH = lengthSlider.value
 })
 settingsButton.addEventListener("click", () => {
     settingsDiv.style.visibility = "visible"

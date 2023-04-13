@@ -15,16 +15,33 @@
     </head>
 </html>
 <body>
-    <div id="title"> Jam Editor</div>
+    <div id="top">
+        <button type="button" id="back">Back</button>
+        <div id="title"> Jam Editor</div>
+        <div id="other-options">
+            <button type="button" id="creations">Creations</button>
+            <button type="button" id="save">Save</button>
+        </div>
+        
+    </div>
+    
     <div id="div-sheet"><table id="sheet"></table></div>
     <div id="div-sheet-overlay"><table id="overlay"></table></div>
     <div id="control">
-        <button type="button" id="play"></button>
-        <button type="button" id="settings">Settings</button>
+        <div id="main-tools">
+            <button type="button" id="play"></button>
+            <button type="button" id="settings">Settings</button>
+        </div>
+        
         <div class="div-tempo">
             <label class="tlabel" for="range">Tempo</label>
             <input type="range" id="tempo" min="40" max="240" value="120">
             <label class="tlabel" id="counter-tempo" for="range">0</label>
+        </div>
+
+        <div id="other-tools">
+            <button type="button" id="tools" class="circle-button">Tools</button>
+            <button type="button" id="undo" class="circle-button" >Undo</button>
         </div>
     </div>
     <div id="settings-popup" visibility="hidden">
@@ -41,6 +58,12 @@
             <label class="split-label" for="range">Split beats into</label>
             <input type="range" id="split" min="1" max="4" value="1">
             <label class="tlabel" id="counter-split" for="range">0</label>
+        </div>
+
+        <div class="div-length">
+            <label class="length-label" for="range">Bar length</label>
+            <input type="range" id="length" min="1" max="16" value="4">
+            <label class="tlabel" id="counter-length" for="range">0</label>
         </div>
 
 
