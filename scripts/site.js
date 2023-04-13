@@ -208,11 +208,11 @@ async function play() {
             }
             
         }
-        await sleep( (60/tempoSlider.value)*1000)
+        await sleep( ((60/tempoSlider.value)*1000) / SPLIT )
         clearBoard()
     }
 
-    
+
     playButton.style.backgroundImage = PLAY_IMAGE
     playing = false;
 }
