@@ -143,14 +143,34 @@ table {
     font-family: 'Sono', sans-serif;
     text-align: center;
     align-items: center;
+    font-size: 1.25em;
 }
 
+#counter-tempo {
+    color: #16a8f0;
+}
+
+#tempo-label {
+    color: rgb(102, 102, 102);
+}
 #tempo{
     accent-color: #16a8f0;
     outline: none;
+    width: 250px;
     
     
 }
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background: #ff4500;
+    cursor: ew-resize;
+    box-shadow: 0 0 2px 0 #555;
+    transition: background .3s ease-in-out;
+  }
 
 #play:hover{
     background-color: rgb(113, 192, 244);
