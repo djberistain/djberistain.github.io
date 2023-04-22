@@ -10,6 +10,7 @@ const FREQUENCIES = {
 }
 const PLAY_IMAGE = "url('https://raw.githubusercontent.com/djberistain/djberistain.github.io/main/images/play.svg')"
 const STOP_IMAGE = "url('https://raw.githubusercontent.com/djberistain/djberistain.github.io/main/images/square.svg')"
+const DEFAULT_LENGTH = 4
 
 // Settings
 
@@ -38,9 +39,11 @@ var tempoCounter = document.getElementById("counter-tempo");
 var beatsPerBarCounter = document.getElementById("counter-bpb")
 var splitCounter = document.getElementById("counter-split")
 var lengthCounter = document.getElementById("counter-length")
+var rangeCounter = document.getElementById("counter-range")
 var tempoSlider = document.getElementById("tempo")
 var splitSlider = document.getElementById("split")
 var lengthSlider = document.getElementById("length")
+var rangeSlider = document.getElementById("rangeS")
 var beatsPerBarSlider = document.getElementById("beats-per-bar")
 var settingsCloseButton = document.getElementById("close-button")
 var settingsDiv = document.getElementById("settings-popup")
@@ -106,10 +109,32 @@ function playNote(i) {
 }
 function createGrid(row, col) {
     let tbl = document.getElementById("sheet")
+    let tbl_checkered = document.getElementById("sheet-checkered")
     let tbl_overlay = document.getElementById("overlay")
     let barColor = GRAY
+    let widthValue = 25*LENGTH;
+    let widthValueStr = String(widthValue)
+    let widthFinal = widthValueStr.concat("%")
+    tbl.style.width = widthFinal
+    tbl_checkered.style.width = widthFinal
+    tbl_overlay.style.width = widthFinal
     grid_row = row
     grid_col = col
+    for (let i = 0; i < row; i++) {
+        let myRow = document.createElement("tr")
+        myRow.id = "rowC" + i  
+        tbl_checkered.append(myRow)
+        barColor = GRAY
+        for (let j = 0; j < (LENGTH*BEATS_PER_BAR); ++j) {
+            let myCell = document.createElement("td")
+            myRow.appendChild(myCell)
+            if (j% BEATS_PER_BAR == 0 ) {
+                barColor = (barColor == GRAY) ? "white" : GRAY
+            }
+            myCell.style.backgroundColor = barColor
+            myCell.style.borderLeft = "2px solid #16a8f0"
+        }
+    }
     for(let i = 0; i < row; i++) { // Begin by creating a row.
         let myRow = document.createElement("tr")
         myRow.id = "row" + i  
@@ -129,10 +154,8 @@ function createGrid(row, col) {
             
             myCell.i = i
             myCell.j = j 
-            
-            if (j% (BEATS_PER_BAR*SPLIT) == 0 ) {
-                barColor = (barColor == GRAY) ? "white" : GRAY
-            }
+
+   
 
             let myCell_overlay = document.createElement("td")
             myCell_overlay.style.backgroundColor = "#16a8f0"
@@ -140,19 +163,23 @@ function createGrid(row, col) {
             myCell.overlay = myCell_overlay
             overlay[i][j] = myCell_overlay
             rowW_overlay.appendChild(myCell_overlay)
-                
             
-            myCell.style.backgroundColor = barColor
-            myCell.default = barColor
+            
+            myCell.style.backgroundColor = "white"
+            myCell.default = myCell.style.backgroundColor
+            myCell.style.opacity = 0
+            myCell.style.borderLeft = "1px solid #16a8f0"
             myCell.addEventListener("click", () => {
                 let color = pickColor(myCell.i)
                 myCell.style.backgroundColor = (myCell.style.backgroundColor == myCell.default) ? color : myCell.default
                 if (myCell.style.backgroundColor != myCell.default) {
                     notes[myCell.i][myCell.j] = getFrequency(myCell.i)
                     notes_overlay[myCell.i][myCell.j] = myCell
+                    myCell.style.opacity = 1
                     playNote(myCell.i)
                 } else {
                     notes[myCell.i][myCell.j] = 0
+                    myCell.style.opacity = 0
                     notes_overlay[myCell.i][myCell.j] = null
                 }
                 
@@ -161,7 +188,6 @@ function createGrid(row, col) {
     }
 }
 function makeSheet(row, col) {
-    
     
     create2DMatrix(row, col, 0)
 
@@ -172,6 +198,7 @@ function makeSheet(row, col) {
     beatsPerBarCounter.innerText = beatsPerBarSlider.value
     splitCounter.innerText = splitSlider.value
     lengthCounter.innerText = lengthSlider.value
+    rangeCounter.innerText = rangeSlider.value
     settingsDiv.style.visibility = "hidden"
 }
 
@@ -222,29 +249,39 @@ function playButtonClicked() {
     play()
 }
 
-function updateSettings() {
-    // TODO : Reset table
-    
-    settingsDiv.style.visibility = "hidden"
-    $('#sheet').empty()
-    $('#overlay').empty()
-    makeSheet(rangeAnalysis(), LENGTH * BEATS_PER_BAR * SPLIT)
 
-    
-}
 
 function rangeAnalysis() {
-    switch(range) {
+    let range2 = 8
+    switch(parseInt(RANGE)) {
         case 1:
-            return 8
+            range2 = 8
+            break
         case 2:
-            return 14
+            range2 = 14
+            break
         case 3:
-            return 21
+            range2 = 21
+            break
         default:
-            return 8
+            range2 = 8
     }
+    return range2
+
 }
+
+function updateSettings() {
+ 
+    
+    settingsDiv.style.visibility = "hidden"
+     $('#sheet').empty()
+     $('#sheet-checkered').empty()
+     $('#overlay').empty()
+     makeSheet(rangeAnalysis(), LENGTH * BEATS_PER_BAR * SPLIT)
+ 
+     
+ }
+
 window.onload = makeSheet(rangeAnalysis(), LENGTH * BEATS_PER_BAR * SPLIT)
 window.onclick = setUpAudio()
 playButton.addEventListener("click", playButtonClicked)
@@ -264,6 +301,10 @@ splitSlider.addEventListener("input", () => {
 lengthSlider.addEventListener("input", () => {
     lengthCounter.innerText = lengthSlider.value
     LENGTH = lengthSlider.value
+})
+rangeSlider.addEventListener("input", () => {
+    rangeCounter.innerText = rangeSlider.value
+    RANGE = rangeSlider.value
 })
 settingsButton.addEventListener("click", () => {
     settingsDiv.style.visibility = "visible"

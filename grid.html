@@ -25,8 +25,14 @@
         
     </div>
     
-    <div id="div-sheet"><table id="sheet"></table></div>
-    <div id="div-sheet-overlay"><table id="overlay"></table></div>
+    <div id="div-container">
+        <div id="div-sheet">
+            <table id="sheet-checkered" class="tbl"></table>
+            <table id="sheet" class="tbl"></table>
+        </div>
+        <div id="div-sheet-overlay"><table id="overlay" class="tbl"></table></div>
+    </div>
+    
     <div id="control">
         <div id="main-tools">
             <button type="button" id="play"></button>
@@ -40,7 +46,7 @@
         </div>
 
         <div id="other-tools">
-            <button type="button" id="tools" class="circle-button">Tools</button>
+            <button type="button" id="tools" class="circle-button">Help</button>
             <button type="button" id="undo" class="circle-button" >Undo</button>
         </div>
     </div>
@@ -64,6 +70,12 @@
             <label class="length-label" for="range">Number of bars</label>
             <input type="range" id="length" min="1" max="16" value="4">
             <label class="tlabel" id="counter-length" for="range">0</label>
+        </div>
+
+        <div class="div-range">
+            <label class="range-label" for="range">Range (octave)</label>
+            <input type="range" id="rangeS" min="1" max="3" value="1">
+            <label class="tlabel" id="counter-range" for="range">0</label>
         </div>
 
 
