@@ -253,7 +253,7 @@ function playButtonClicked() {
 
 function rangeAnalysis() {
     let range2 = 8
-    switch(parseInt(RANGE)) {
+    switch(RANGE) {
         case 1:
             range2 = 8
             break
@@ -304,7 +304,7 @@ lengthSlider.addEventListener("input", () => {
 })
 rangeSlider.addEventListener("input", () => {
     rangeCounter.innerText = rangeSlider.value
-    RANGE = rangeSlider.value
+    RANGE = parseInt(rangeSlider.value)
 })
 settingsButton.addEventListener("click", () => {
     settingsDiv.style.visibility = "visible"
