@@ -54,7 +54,7 @@ button
   z-index: 9;
 }
 
-/* Add styles to the form container */
+
 .form-container 
 {
     display: block;
@@ -64,7 +64,7 @@ button
   background-color: white;
 }
 
-/* Full-width input fields */
+
 .form-container input[type=text],
 .form-container input[type=password],
 .form-container input[type=email] 
@@ -76,7 +76,7 @@ button
   background: #ebeaea;
 }
 
-/* When the inputs get focus, do something */
+
 .form-container input[type=text]:focus,
 .form-container input[type=password]:focus 
 {
@@ -84,7 +84,7 @@ button
   outline: none;
 }
 
-/* Set a style for the submit/login button */
+
 .form-container .btn 
 {
   background-color: #04AA6D;
@@ -97,13 +97,13 @@ button
   opacity: 0.8;
 }
 
-/* Add a red background color to the cancel button */
+
 .form-container .cancel 
 {
   background-color: red;
 }
 
-/* Add some hover effects to buttons */
+
 .form-container .btn:hover, .open-button:hover 
 {
   opacity: 1;
