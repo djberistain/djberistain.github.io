@@ -31,6 +31,7 @@ var length_ = LENGTH
 var beatsPerBar = BEATS_PER_BAR
 var range = RANGE
 var playing = false;
+var lastNote = -1;
 var overlayCreated = false
 
 // Objects
@@ -49,7 +50,169 @@ var settingsCloseButton = document.getElementById("close-button")
 var settingsDiv = document.getElementById("settings-popup")
 var settingsButton = document.getElementById("settings")
 
+
+
 // Functions
+
+///////
+
+var context = new AudioContext;
+
+function Kick(context) 
+{
+	this.context = context;
+};
+
+    Kick.prototype.setup = function() 
+    {
+	this.osc = this.context.createOscillator();
+    this.gain = this.context.createGain();
+    this.gain.gain.setValueAtTime(1, 0);
+    this.gain.gain.exponentialRampToValueAtTime(0.001, this.context.currentTime + 0.5);
+	this.osc.connect(this.gain);
+	this.gain.connect(this.context.destination);
+    };
+
+Kick.prototype.trigger = function(time) 
+    {
+	this.setup();
+
+	this.osc.frequency.setValueAtTime(150, time);
+	this.gain.gain.setValueAtTime(1, time);
+
+	this.osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.5);
+	this.gain.gain.exponentialRampToValueAtTime(0.01, time + 0.5);
+
+	this.osc.start(time);
+	this.osc.stop(time + 0.5);
+    };
+
+function playKick()
+    {
+    var kick = new Kick(context);
+    var now = context.currentTime;
+    kick.trigger(now);
+    }
+
+    /*********************************************** */
+
+    function Snare(context) 
+    {
+        this.context = context;
+    };    
+
+    Snare.prototype.noiseBuffer = function() 
+    {
+        var bufferSize = this.context.sampleRate;
+        var buffer = this.context.createBuffer(1, bufferSize, this.context.sampleRate);
+        var output = buffer.getChannelData(0);
+    
+        for (var i = 0; i < bufferSize; i++) {
+            output[i] = Math.random() * 2 - 1;
+        }
+    
+        return buffer;
+    };
+
+    Snare.prototype.setup = function() 
+    {
+        this.noise = this.context.createBufferSource();
+        this.noise.buffer = this.noiseBuffer();
+        var noiseFilter = this.context.createBiquadFilter();
+        noiseFilter.type = 'highpass';
+        noiseFilter.frequency.value = 1000;
+        this.noise.connect(noiseFilter);
+
+        this.noiseEnvelope = this.context.createGain();
+        noiseFilter.connect(this.noiseEnvelope);
+        this.noiseEnvelope.connect(this.context.destination);
+
+        this.osc = this.context.createOscillator();
+        this.osc.type = 'triangle';
+
+        this.oscEnvelope = this.context.createGain();
+        this.osc.connect(this.oscEnvelope);
+        this.oscEnvelope.connect(this.context.destination);
+    };
+
+    Snare.prototype.trigger = function(time) {
+        this.setup();
+    
+        this.noiseEnvelope.gain.setValueAtTime(1, time);
+        this.noiseEnvelope.gain.exponentialRampToValueAtTime(0.01, time + 0.2);
+        this.noise.start(time)
+    
+        this.osc.frequency.setValueAtTime(250, time);
+        this.oscEnvelope.gain.setValueAtTime(0.7, time);
+        this.oscEnvelope.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
+        this.osc.start(time)
+    
+        this.osc.stop(time + 0.2);
+        this.noise.stop(time + 0.2);
+    };
+
+    function playSnare()
+    {
+    var snare = new Snare(context);
+    var now = context.currentTime;
+    snare.trigger(now);
+    }
+
+    /************************************** */
+
+    var fundamental = 40;
+    var ratios = [2, 3, 4.16, 5.43, 6.79, 8.21];
+
+   
+    
+    function HiHat()
+    {
+        this.context = context;
+    }
+
+    
+    HiHat.prototype.trigger = function(time, gain)
+    {
+        var bandpass = context.createBiquadFilter();
+        bandpass.type = "bandpass";
+        bandpass.frequency.value = 10000;
+
+        var highpass = context.createBiquadFilter();
+        highpass.type = "highpass";
+        highpass.frequency.value = 7000;
+
+        bandpass.connect(highpass);
+        highpass.connect(gain);
+        gain.connect(context.destination);
+
+        ratios.forEach(function(ratio) {
+        var osc = context.createOscillator();
+        osc.type = "square";
+        osc.frequency.value = fundamental * ratio;
+        osc.connect(bandpass);
+        osc.start(time);
+        osc.stop(time + 0.5);   
+        });
+        
+    };
+    
+   
+    function playHat()
+   {   
+
+    var hiHat = new HiHat(context);
+    var now = context.currentTime; 
+    var gain = context.createGain();  
+    gain.gain.setValueAtTime(0.00001, now);
+    gain.gain.exponentialRampToValueAtTime(1, now + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.3, now + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.00001, now + 0.3);
+    hiHat.trigger(now, gain);
+   }
+    
+   
+
+///////
 
 function sleep(ms) {
     return new Promise(
@@ -89,23 +252,52 @@ function getFrequency(i) {
     return FREQUENCIES[0][i]
 }
 
+function isDrum(i) {
+    if (i == lastNote + 1 || i == lastNote + 2 || i == lastNote + 3) {
+        return true
+    }
+    return false
+}
+
 function playNote(i) {
-    let compressor = audioContext.createDynamicsCompressor()
-    compressor.connect(audioContext.destination)
 
-    let gainNode = audioContext.createGain()
-    gainNode.gain.setValueAtTime(0.15, audioContext.currentTime)
-    gainNode.connect(compressor)
-    let oscillator = audioContext.createOscillator()
-    oscillator.type = "sawtooth"
-    oscillator.frequency.setValueAtTime(getFrequency(i), audioContext.currentTime); // value in hertz
-    oscillator.connect(gainNode);
-    oscillator.start();
-    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.4)
-    
-    
-    
+    if (!isDrum(i)) {
+        let compressor = audioContext.createDynamicsCompressor()
+        compressor.connect(audioContext.destination)
 
+        let gainNode = audioContext.createGain()
+        gainNode.gain.setValueAtTime(0.15, audioContext.currentTime)
+        gainNode.connect(compressor)
+        let oscillator = audioContext.createOscillator()
+        oscillator.type = "sawtooth"
+        oscillator.frequency.setValueAtTime(getFrequency(i), audioContext.currentTime); // value in hertz
+        oscillator.connect(gainNode);
+        oscillator.start();
+        gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.4)
+    } else {
+        if (i == lastNote + 1) {
+            playHat()
+        } else if (i == lastNote + 2) {
+            playSnare()
+        } else if (i == lastNote + 3) {
+            playKick()
+        }
+    }
+    
+    
+}
+
+
+
+function returnDrumColor(i) {
+    if (i == lastNote + 1) {
+        return "rgba(255, 0, 0, 1)"
+    } else if (i == lastNote + 2) {
+        return "rgba(0, 255, 0, 1)"
+    } else if (i == lastNote + 3) {
+        return "rgba(0, 0, 255, 1)"
+    }
+    return "rgba(217, 217, 217, 1)" 
 }
 function createGrid(row, col) {
     let tbl = document.getElementById("sheet")
@@ -115,6 +307,8 @@ function createGrid(row, col) {
     let widthValue = 25*LENGTH;
     let widthValueStr = String(widthValue)
     let widthFinal = widthValueStr.concat("%")
+    let orbWidth = 15 * SPLIT
+    let orbHeight = 18 * SPLIT
     tbl.style.width = widthFinal
     tbl_checkered.style.width = widthFinal
     tbl_overlay.style.width = widthFinal
@@ -152,9 +346,10 @@ function createGrid(row, col) {
             let myCell = document.createElement("td")
             rowW.appendChild(myCell)
             
-            myCell.i = i + 3 // shift index 
+            myCell.i = i  // shift index 
             myCell.j = j 
-
+            myCell.enabled = false
+            
    
 
             let myCell_overlay = document.createElement("td")
@@ -170,20 +365,56 @@ function createGrid(row, col) {
             myCell.style.opacity = 0
             myCell.style.borderLeft = "1px solid #16a8f0"
 
+            
+            if (isDrum(myCell.i)) {
+                console.log("reds")
+                myCell.style.opacity = 1
+                myCell.style.backgroundColor = "rgba(255, 255, 255, 0.3)"
+                let orb = document.createElement("div")
+                myCell.appendChild(orb)
+                orb.style.backgroundColor = "red"
+                
+                orb.style.width = orbWidth + "%"
+                orb.style.height = orbHeight + "%"
+                orb.style.borderRadius = "50%"
+                orb.style.display = "flex"
+                orb.style.alignItems = "center"
+                orb.style.justifyContent = "center"
+                orb.style.margin = "0px auto"
+                orb.style.backgroundColor = "rgba(217, 217, 217, 1)"
+
+                myCell.orb = orb
+
+            }
 
             myCell.addEventListener("click", () => {
-                let color = pickColor(myCell.i)
-                myCell.style.backgroundColor = (myCell.style.backgroundColor == myCell.default) ? color : myCell.default
-                if (myCell.style.backgroundColor != myCell.default) {
-                    notes[myCell.i][myCell.j] = getFrequency(myCell.i)
-                    notes_overlay[myCell.i][myCell.j] = myCell
-                    myCell.style.opacity = 1
-                    playNote(myCell.i - 3) // shift index back
+                
+                if (!isDrum(myCell.i)) {
+                    let color = pickColor(myCell.i)
+                    myCell.style.backgroundColor = (myCell.style.backgroundColor == myCell.default) ? color : myCell.default
+                    if (myCell.style.backgroundColor != myCell.default) {
+                        notes[myCell.i][myCell.j] = getFrequency(myCell.i)
+                        notes_overlay[myCell.i][myCell.j] = myCell
+                        myCell.style.opacity = 1
+                        playNote(myCell.i) // shift index back
+                    } else {
+                        notes[myCell.i][myCell.j] = 0
+                        myCell.style.opacity = 0
+                        notes_overlay[myCell.i][myCell.j] = null
+                    }
                 } else {
-                    notes[myCell.i][myCell.j] = 0
-                    myCell.style.opacity = 0
-                    notes_overlay[myCell.i][myCell.j] = null
+                    if (!myCell.enabled) {
+                        myCell.enabled = true
+                        notes[myCell.i][myCell.j] = 1
+                        playNote(myCell.i)
+                        myCell.orb.style.backgroundColor = returnDrumColor(myCell.i)
+                    } else {
+                        myCell.enabled = false 
+                        notes[myCell.i][myCell.j] = 0
+                        myCell.orb.style.backgroundColor = "rgba(217, 217, 217, 1)"
+                    }
                 }
+                
                 
             })
         }
@@ -233,6 +464,7 @@ async function play() {
                 break
             overlay[row][col].style.visibility = "visible"
             if (notes[row][col] != 0) {
+                
                 playNote(row)
             }
             
@@ -255,18 +487,23 @@ function playButtonClicked() {
 
 function rangeAnalysis() {
     let range2 = 8 + 3 // plus three for drum rows
+    lastNote = 7;
     switch(RANGE) {
         case 1:
             range2 = 8 + 3 // plus three for drum rows
+            lastNote = 7;
             break
         case 2:
             range2 = 15 + 3 // plus seven for extra octave
+            lastNote = 14;
             break
         case 3:
             range2 = 22 + 3// plus seven for extra octave
+            lastNote = 21;
             break
         default:
             range2 = 8 + 3
+
     }
     return range2
 
