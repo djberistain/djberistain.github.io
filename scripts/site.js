@@ -537,7 +537,7 @@ function rangeAnalysis() {
 
 function updateSettings() {
  
-    
+    console.log("a")
     settingsDiv.style.visibility = "hidden"
      $('#sheet').empty()
      $('#sheet-checkered').empty()
