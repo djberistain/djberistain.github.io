@@ -101,6 +101,7 @@ Kick.prototype.trigger = function(time)
 	this.osc.stop(time + 0.5);
     };
 
+
 function playKick()
     {
     var kick = new Kick(context);
@@ -295,7 +296,8 @@ function playNote(i) {
         oscillator.frequency.setValueAtTime(getFrequency(i), audioContext.currentTime); // value in hertz
         oscillator.connect(gainNode);
         oscillator.start();
-        gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.4)
+        let waitTime = (60 / tempoSlider.value) / SPLIT
+        gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + waitTime)
     } else {
         if (i == lastNote + 1) {
             playHat()
