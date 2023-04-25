@@ -16,7 +16,7 @@
 </html>
 <body>
     <div id="top">
-        <button type="button" id="back">Back</button>
+       <a href="index.html"><button type="button" id="back"><img id="back-button" src="images/backButton.png" alt="back-button"></button></a> 
         <div id="title"> Jam Editor</div>
         <div id="other-options">
             <button type="button" id="creations">Creations</button>
@@ -36,7 +36,7 @@
     <div id="control">
         <div id="main-tools">
             <button type="button" id="play"></button>
-            <button type="button" id="settings">Settings</button>
+            <button type="button" id="settings"><img id="settings-button" src="images/settingsButton.png" alt="settings-button"></button>
         </div>
         
         <div class="div-tempo">
@@ -46,7 +46,7 @@
         </div>
 
         <div id="other-tools">
-            <button type="button" id="tools" class="circle-button">Help</button>
+            <button type="button" id="help" class="circle-button"><img id="help-button" src="images/helpButton.png" alt=""></button>
             <button type="button" id="undo" class="circle-button" >Undo</button>
         </div>
     </div>
@@ -83,8 +83,50 @@
 
     </div>
     
-    
+  
+<div id="myModal" class="modal">
+
+   
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h1>Behold the Jam Editor!</h1>
+      <p>You can click in a blank square to place a note.</p>
+       <p>Click in that square again erase the note.</p>
+        <p>The bottom three rows are reserved for percussion. There's a bass drum, a snare, and a hi-hat.</p>
+        <p>The trebleclef button allows you to change the length of your song, the number of beats per bar, and the range of notes available.</p>
+         <p>Press the play button to hear your creation!</p>
+    </div>
+  
+  </div>
 </body>
 
 <script src="scripts/site.js"></script>
+<script>
+   
+    var modal = document.getElementById("myModal");
+    
+    
+    var btn = document.getElementById("help");
+    
+  
+    var span = document.getElementsByClassName("close")[0];
+    
+    
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+    
+   
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+    
+   
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+    </script>
+    
 </html>
