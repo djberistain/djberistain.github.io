@@ -138,9 +138,14 @@ table {
     height :10vh;
 }
 
+#help
+{
+    margin: 0vh 2.5vh 0vh 0vh;
+}
+
 #help-button
 {
-    margin : -16px 0px 0px -21px;
+    margin: -2.2vh 0vh 0vh -2.75vh;
     width :13.5vh;
     height :13.5vh;
 }
