@@ -4,9 +4,22 @@
 const COLORS = ["HotPink", "ForestGreen", "DarkOrange", "Indigo", "MediumSeaGreen", "Gold", "Crimson"]
 
 const GRAY = "rgb(245, 245, 245)"
-const FREQUENCIES = {
-    0: [261.63, 246.94, 220.00, 196, 174.61, 164.81, 146.83, 130.81]
+const FREQUENCIES0 = {
+    0: [130.82, 123.47, 110.00, 98.00, 87.31, 82.41, 73.42, 65.41],
+    1: [261.63, 246.94, 220.00, 196, 174.61, 164.81, 146.83, 130.81],
+    2: [523.26, 493.88, 440.00, 392, 349.22, 329.62, 293.66, 261.62]
    
+}
+const FREQUENCIES1 = {
+    0: [261.63, 246.94, 220.00, 196, 174.61, 164.81, 146.83, 130.81, 123.47, 110.00, 98.00, 87.31, 82.41, 73.42, 65.41]
+   
+}
+const FREQUENCIES2 = {
+    0: [523.26, 493.88, 440.00, 392, 349.22, 329.62, 293.66, 261.63, 246.94, 220.00, 196, 174.61, 164.81, 146.83, 130.81, 123.47, 110.00, 98.00, 87.31, 82.41, 73.42, 65.41]
+   
+}
+const FREQUENCIES = {
+    0: [130.82, 123.47, 110.00, 98.00, 87.31, 82.41, 73.42, 65.41],
 }
 const PLAY_IMAGE = "url('https://raw.githubusercontent.com/djberistain/djberistain.github.io/main/images/play.svg')"
 const STOP_IMAGE = "url('https://raw.githubusercontent.com/djberistain/djberistain.github.io/main/images/square.svg')"
@@ -32,6 +45,7 @@ var beatsPerBar = BEATS_PER_BAR
 var range = RANGE
 var playing = false;
 var lastNote = -1;
+var octave = 0
 var overlayCreated = false
 
 // Objects
@@ -249,7 +263,15 @@ function pickColor(i) {
 }
 
 function getFrequency(i) {
-    return FREQUENCIES[0][i]
+    if (octave == 0) {
+        return FREQUENCIES[0][i] 
+    } else if (octave == 1) {
+        return FREQUENCIES1[0][i] 
+    } else if (octave == 2) {
+        return FREQUENCIES2[0][i] 
+    }
+    
+
 }
 
 function isDrum(i) {
@@ -367,7 +389,7 @@ function createGrid(row, col) {
 
             
             if (isDrum(myCell.i)) {
-                console.log("reds")
+                myCell.style.boxShadow = "0px 0px 0px 1px rgba(114, 190, 236, 0.5)"
                 myCell.style.opacity = 1
                 myCell.style.backgroundColor = "rgba(255, 255, 255, 0.3)"
                 let orb = document.createElement("div")
@@ -492,17 +514,21 @@ function rangeAnalysis() {
         case 1:
             range2 = 8 + 3 // plus three for drum rows
             lastNote = 7;
+            octave = 0
             break
         case 2:
             range2 = 15 + 3 // plus seven for extra octave
             lastNote = 14;
+            octave = 1
             break
         case 3:
             range2 = 22 + 3// plus seven for extra octave
             lastNote = 21;
+            octave = 2
             break
         default:
             range2 = 8 + 3
+            octave = 0
 
     }
     return range2
