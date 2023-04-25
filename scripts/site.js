@@ -152,7 +152,7 @@ function createGrid(row, col) {
             let myCell = document.createElement("td")
             rowW.appendChild(myCell)
             
-            myCell.i = i
+            myCell.i = i + 3 // shift index 
             myCell.j = j 
 
    
@@ -169,6 +169,8 @@ function createGrid(row, col) {
             myCell.default = myCell.style.backgroundColor
             myCell.style.opacity = 0
             myCell.style.borderLeft = "1px solid #16a8f0"
+
+
             myCell.addEventListener("click", () => {
                 let color = pickColor(myCell.i)
                 myCell.style.backgroundColor = (myCell.style.backgroundColor == myCell.default) ? color : myCell.default
@@ -176,7 +178,7 @@ function createGrid(row, col) {
                     notes[myCell.i][myCell.j] = getFrequency(myCell.i)
                     notes_overlay[myCell.i][myCell.j] = myCell
                     myCell.style.opacity = 1
-                    playNote(myCell.i)
+                    playNote(myCell.i - 3) // shift index back
                 } else {
                     notes[myCell.i][myCell.j] = 0
                     myCell.style.opacity = 0
@@ -252,19 +254,19 @@ function playButtonClicked() {
 
 
 function rangeAnalysis() {
-    let range2 = 8
+    let range2 = 8 + 3 // plus three for drum rows
     switch(RANGE) {
         case 1:
-            range2 = 8
+            range2 = 8 + 3 // plus three for drum rows
             break
         case 2:
-            range2 = 14
+            range2 = 15 + 3 // plus seven for extra octave
             break
         case 3:
-            range2 = 21
+            range2 = 22 + 3// plus seven for extra octave
             break
         default:
-            range2 = 8
+            range2 = 8 + 3
     }
     return range2
 
