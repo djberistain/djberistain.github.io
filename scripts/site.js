@@ -100,6 +100,7 @@ Kick.prototype.trigger = function(time)
 	this.osc.start(time);
 	this.osc.stop(time + 0.5);
     };
+    
 
 function playKick()
     {
